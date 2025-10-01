@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2025-10-01
+
+### 🐛 Bug Fixes
+
+- Correction des failles et bugs existants:
+  - acces utilisateurs non admin au panneau de config
+  - mots de passes non chiffrés
+  - injection XSS sur des formulaires
+  - correction injection SQL
+  - Route habit/toggle manquante
+  - Faute de frappe dans HabitsController
+
 ## [1.0.0] - 2025-10-01
 
 ### Feat
