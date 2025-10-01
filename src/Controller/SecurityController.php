@@ -19,7 +19,8 @@ class SecurityController extends AbstractController
 
         if(!empty($_SESSION['user']))
         {
-            $_SESSION['admin'] ? header('Location: /admin/dashboard') : header('Location: /user/dashboard'); die;
+            $_SESSION['admin'] ? header('Location: /admin/dashboard') : header('Location: /dashboard'); 
+            exit;
         }
 
         if(!empty($_POST)) {
@@ -29,8 +30,8 @@ class SecurityController extends AbstractController
             $user = $this->userRepository->findByEmail($username);
 
             if($user) {
-                // On vérifie le mot de passe
-                if($password == $user->getPassword()) {
+                // On vérifie le mot de passe avec password_verify
+                if(password_verify($password, $user->getPassword())) {
     
                     $_SESSION['user'] = [
                         'id' => $user->getId(),
@@ -38,13 +39,14 @@ class SecurityController extends AbstractController
                     ];
 
                     if($user->getIsadmin()) {
-                        header('Location: /admin/dashboard');
                         $_SESSION['admin'] = $user->getIsAdmin();
+                        header('Location: /admin/dashboard');
                         exit;
                     }
                     else
                     {
                         header('Location: /dashboard');
+                        exit;
                     }
                 }
                 else
@@ -52,8 +54,10 @@ class SecurityController extends AbstractController
                     $error = 'Invalid username or password';
                 }
             }
-
-            $error = 'Invalid username or password';
+            else
+            {
+                $error = 'Invalid username or password';
+            }
         }
 
         return $this->render('security/login.html.php', [
